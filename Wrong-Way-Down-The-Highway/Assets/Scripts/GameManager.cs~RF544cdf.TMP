@@ -1,0 +1,39 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class GameManager : MonoBehaviour
+{
+
+    private string currentSceneName;
+    // Start is called before the first frame update
+    void Start()
+    {
+        FindObjectOfType<Bike>().crashEvent += pauseGame; // I could also set game manager to be a singleton but i wanted to demonstrate my use of delegates for the interview
+        //if the game was much bigger (and had many more ways the player could die) i would use a singleton instead and simply call the instance within the Bike class when the bike crashes
+        currentSceneName = SceneManager.GetActiveScene().name;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    public void pauseGame()
+    {
+        Debug.Log("Game paused");
+        Time.timeScale = 0;
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(currentSceneName);
+    }
+
+    private void OnDestroy()
+    {
+        FindObjectOfType<Bike>().crashEvent -= pauseGame; //to restart scene
+    }
+}
